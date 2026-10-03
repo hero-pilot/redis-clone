@@ -8,7 +8,7 @@ type Store struct {
 	data map[string]string
 }
 
-func (s *Store) Get(key string) (string, bool) {
+func (s *Store) Get(key string) (value string, exists bool) {
 	v, ok := s.data[key]
 	return v, ok
 }
