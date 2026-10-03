@@ -1,0 +1,113 @@
+# ===========================
+# Go
+# ===========================
+# Compiled binaries (adjust names to match your build output)
+/redis-clone
+/redis-clone.exe
+/server
+/client
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+*.out
+coverage.out
+coverage.html
+*.cover
+*.coverprofile
+
+# Go workspace
+go.work
+go.work.sum
+
+# Vendored dependencies (uncomment if you DON'T want to commit vendor/)
+# vendor/
+
+# Go build cache / generated files
+*.a
+*.o
+__debug_bin*
+__debug_bin*.exe
+
+# ===========================
+# Redis Clone Runtime Data
+# ===========================
+# Append-only file (AOF persistence)
+*.aof
+appendonly.aof
+appendonlydir/
+
+# RDB snapshots
+dump.rdb
+*.rdb
+
+# PID / lock / log files
+*.pid
+*.log
+redis-clone.log
+*.sock
+
+# Data directory
+/data/
+/tmp/
+/run/
+
+# ===========================
+# VS Code
+# ===========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local history
+.history/
+*.vsix
+
+# ===========================
+# JetBrains / GoLand / IntelliJ (in case)
+# ===========================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ===========================
+# Fedora / Linux
+# ===========================
+*~
+.directory
+.Trash-*
+.nfs*
+# Core dumps
+core
+core.*
+vgcore.*
+
+# ===========================
+# Environment & secrets
+# ===========================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# ===========================
+# OS / Editor misc
+# ===========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
