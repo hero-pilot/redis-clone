@@ -28,8 +28,29 @@ func (s *Store) Keys() []string {
 	return keys
 }
 
+func (s *Store) Len()  int{
+	return  len(s.data)
+}
+
 func NewStore() *Store {
 	return &Store{
 		data: make(map[string]string),
 	}
+}
+
+
+func (s *Store) Rename(oldKey, newKey string) {
+	if v, exists := s.Get(oldKey); exists{
+		s.Set(newKey, v)
+		s.Delete(oldKey)
+	} 
+}
+
+
+func (s *Store) Pop(key string) (string, bool) {
+	if v, exists := s.Get(key); exists{
+		s.Delete(key)
+		return v, exists
+	}
+	return "", false
 }
