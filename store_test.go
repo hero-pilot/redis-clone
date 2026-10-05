@@ -32,14 +32,14 @@ func TestKeys_EmptyStore(t *testing.T) {
 func TestSetGet_RoundTrip(t *testing.T) {
 	store := NewStore()
 	store.Set("hello", "world")
-	v, exists := store.Get("hello")
-	if !exists{
+	v, error := store.Get("hello")
+	if error != nil{
 		t.Error("It should exist, but it doesn't ?")
 	}else if v != "world"{
 		t.Error("Wrong value, which is wierd")
 	}
-	v, exists = store.Get("missing")
-	if exists{
+	v, error = store.Get("missing")
+	if error ==nil{
 		t.Error("It shouldn't exist  !!1")
 	}else if v != ""{
 		t.Error("It shouldn't have a value at all!!!")
@@ -53,9 +53,9 @@ func TestRename_MovesTheValue(t *testing.T) {
 	value, _ := set.Get("wow")
 	set.Rename("wow", "yo")
 	
-	if v, exists := set.Get("yo"); !exists{
+	if v, error := set.Get("yo"); error !=nil{
 		t.Error("It hasn't renamed the key!!")
-	}else if _, exists = set.Get("wow"); exists{
+	}else if _, error = set.Get("wow"); error ==nil{
 		t.Error("The old key still exists dumbass !!!")
 	}else if v != value {
 		t.Errorf("The value should remain the same! , expected: %v, got:%v", value, v)
@@ -66,17 +66,17 @@ func TestPop_ReturnsAndRemoves(t *testing.T) {
 	store := NewStore()
 	store.Set("wow", "wow forever")
 
-	value , exist := store.Get("wow")
-	if !exist{
+	value , error := store.Get("wow")
+	if error !=nil{
 		t.Error("What the hell!")
 	}
-	if v, exists := store.Pop("wow") ; !exists{
+	if v, error := store.Pop("wow") ; error !=nil{
 		t.Error("Again, what the hell?")
 	}else if v != value{
 		t.Error("Now this is some funny shit going on")
 	}
 
-	if _, exist= store.Pop("wow") ; exist{
+	if _, error= store.Pop("wow") ; error ==nil{
 		t.Error("This should not be in the store bitch")
 	}
 	
@@ -87,7 +87,7 @@ func TestRename_MissingKeyCreatesNothing(t *testing.T) {
 	store := NewStore()
 	store.Set("wow", "boo")
 	store.Rename("no", "yes")
-	if _ ,exists := store.Get("no"); exists{
+	if _ ,error := store.Get("no"); error ==nil{
 		t.Error("It shouldn't exist !!!")
 	}
 	got := store.Keys()

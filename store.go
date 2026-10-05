@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"sort"
 )
 
@@ -8,9 +9,12 @@ type Store struct {
 	data map[string]string
 }
 
-func (s *Store) Get(key string) (value string, exists bool) {
+func (s *Store) Get(key string) (value string, err error) {
 	v, ok := s.data[key]
-	return v, ok
+	if !ok {
+		return v, errors.New("value doesn;t exist")
+	}
+	return v, nil
 }
 func (s *Store) Set(key string, value string) {
 	s.data[key] = value
@@ -28,8 +32,8 @@ func (s *Store) Keys() []string {
 	return keys
 }
 
-func (s *Store) Len()  int{
-	return  len(s.data)
+func (s *Store) Len() int {
+	return len(s.data)
 }
 
 func NewStore() *Store {
@@ -38,19 +42,21 @@ func NewStore() *Store {
 	}
 }
 
-
 func (s *Store) Rename(oldKey, newKey string) {
-	if v, exists := s.Get(oldKey); exists{
-		s.Set(newKey, v)
-		s.Delete(oldKey)
-	} 
+	v, error := s.Get(oldKey)
+	if error != nil {
+		return
+	}
+	s.Set(newKey, v)
+	s.Delete(oldKey)
 }
 
-
-func (s *Store) Pop(key string) (string, bool) {
-	if v, exists := s.Get(key); exists{
-		s.Delete(key)
-		return v, exists
+func (s *Store) Pop(key string) (string, error) {
+	v, error := s.Get(key)
+	if error != nil {
+		return "", error
 	}
-	return "", false
+
+	s.Delete(key)
+	return v, nil
 }
