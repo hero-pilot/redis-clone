@@ -2,22 +2,32 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"sort"
 )
 
+
+var ErrMaxCapacity = errors.New("max capacity reached")
+
 type Store struct {
 	data map[string]string
+	maxSize int
 }
 
 func (s *Store) Get(key string) (value string, err error) {
 	v, ok := s.data[key]
 	if !ok {
-		return v, errors.New("value doesn;t exist")
+		return v, errors.New("value doesn't exist")
 	}
 	return v, nil
 }
-func (s *Store) Set(key string, value string) {
+func (s *Store) Set(key, value string) error {
+	if _, exists := s.data[key]; !exists && s.maxSize > 0 && s.Len() >= s.maxSize {
+		return fmt.Errorf("Set(%q): %w", key, ErrMaxCapacity)
+	}
+
 	s.data[key] = value
+	return nil
 }
 func (s *Store) Delete(key string) {
 	delete(s.data, key)
@@ -36,9 +46,10 @@ func (s *Store) Len() int {
 	return len(s.data)
 }
 
-func NewStore() *Store {
+func NewStore(maxSize int) *Store {
 	return &Store{
 		data: make(map[string]string),
+		maxSize: maxSize,
 	}
 }
 

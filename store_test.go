@@ -1,12 +1,13 @@
 package main
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 )
 
 func TestKeys_returns_sorted_keys(t *testing.T) {
-	store := NewStore()
+	store := NewStore(0)
 	store.Set("alpha", "beta")
 	store.Set("pashm", "shishe")
 	store.Set("erfan", "dousti")
@@ -20,7 +21,7 @@ func TestKeys_returns_sorted_keys(t *testing.T) {
 }
 
 func TestKeys_EmptyStore(t *testing.T) {
-	store := NewStore()
+	store := NewStore(0)
 
 	got := store.Keys()
 	if len(got) != 0{
@@ -30,7 +31,7 @@ func TestKeys_EmptyStore(t *testing.T) {
 }
 
 func TestSetGet_RoundTrip(t *testing.T) {
-	store := NewStore()
+	store := NewStore(0)
 	store.Set("hello", "world")
 	v, error := store.Get("hello")
 	if error != nil{
@@ -48,7 +49,7 @@ func TestSetGet_RoundTrip(t *testing.T) {
 }
 
 func TestRename_MovesTheValue(t *testing.T) {
-	set := NewStore()
+	set := NewStore(0)
 	set.Set("wow", "pashm")
 	value, _ := set.Get("wow")
 	set.Rename("wow", "yo")
@@ -63,7 +64,7 @@ func TestRename_MovesTheValue(t *testing.T) {
 }
 
 func TestPop_ReturnsAndRemoves(t *testing.T) {
-	store := NewStore()
+	store := NewStore(0)
 	store.Set("wow", "wow forever")
 
 	value , error := store.Get("wow")
@@ -84,7 +85,7 @@ func TestPop_ReturnsAndRemoves(t *testing.T) {
 
 func TestRename_MissingKeyCreatesNothing(t *testing.T) {
 
-	store := NewStore()
+	store := NewStore(0)
 	store.Set("wow", "boo")
 	store.Rename("no", "yes")
 	if _ ,error := store.Get("no"); error ==nil{
@@ -96,5 +97,15 @@ func TestRename_MissingKeyCreatesNothing(t *testing.T) {
 	}
 	if got[0] != "wow"{
 		t.Error("This is wrong buddy")
+	}
+}
+
+func TestMaxSize_MaxCapacity(t *testing.T){
+	store := NewStore(2)
+	store.Set("wow", "Relly")
+	store.Set("welp", "shrimp")
+	err := store.Set("nope", "shouldn't")
+	if err == nil || !errors.Is(err, ErrMaxCapacity){
+		t.Error("Set either exceeded max capacity or it didin't work")
 	}
 }
